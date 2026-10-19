@@ -85,45 +85,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method of item
     //-----------------------------------------------------------
     public boolean updateItemNum(String name, int num) {
-        // Get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(ITEM_COLUMN_NUM, num);
 
-        ContentValues values = new ContentValues();
-        values.put(ITEM_COLUMN_NUM, num);
-
-        // Updating row
-        int id = db.update(ITEM_TABLE_NAME, values,
-                ITEM_COLUMN_NAME + " = ? ",
-                new String[]{name});
-
-        // Close db connection
-        db.close();
-
-        if (id == -1) {
-            return false;
+            int rows = db.update(ITEM_TABLE_NAME, values,
+                    ITEM_COLUMN_NAME + " = ? ",
+                    new String[]{name});
+            return rows > 0;
+        } finally {
+            db.close();
         }
-        return true;
     }
 
     public int getItemNum(String name) {
-        // Get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(ITEM_TABLE_NAME,
-                new String[]{ITEM_COLUMN_NUM},
-                ITEM_COLUMN_NAME + " =? ",
-                new String[]{name},
-                null, null, null, null);
-
+        Cursor cursor = null;
         int number = -1;
-        if (cursor.moveToFirst()) {
-            number = cursor.getInt(0);
+        try {
+            cursor = db.query(ITEM_TABLE_NAME,
+                    new String[]{ITEM_COLUMN_NUM},
+                    ITEM_COLUMN_NAME + " =? ",
+                    new String[]{name},
+                    null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                number = cursor.getInt(0);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-
-        // close the db connection
-        cursor.close();
-        db.close();
-
         return number;
     }
     //===========================================================
@@ -132,86 +127,86 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method of level star
     //-----------------------------------------------------------
     public boolean insertLevelStar(int star) {
-        // Get writable database as we want to write data
         SQLiteDatabase db = getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        // ID will be inserted automatically.
-        values.put(STAR_COLUMN_STAR, star);
-
-        // Insert row
-        long id = db.insert(STAR_TABLE_NAME, null, values);
-
-        // Close db connection
-        db.close();
-
-        if (id == -1) {
-            return false;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(STAR_COLUMN_STAR, star);
+            long id = db.insert(STAR_TABLE_NAME, null, values);
+            return id != -1;
+        } finally {
+            db.close();
         }
-        return true;
+    }
+
+    public boolean insertLevelStar(int levelID, int star) {
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(STAR_COLUMN_LEVEL, levelID);
+            values.put(STAR_COLUMN_STAR, star);
+            long id = db.insertWithOnConflict(STAR_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            return id != -1;
+        } finally {
+            db.close();
+        }
     }
 
     public boolean updateLevelStar(int levelID, int star) {
-        // Get writable database as we want to write data
         SQLiteDatabase db = getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(STAR_COLUMN_STAR, star);
 
-        ContentValues values = new ContentValues();
-        values.put(STAR_COLUMN_STAR, star);
-
-        // Updating row
-        int id = db.update(STAR_TABLE_NAME, values,
-                STAR_COLUMN_LEVEL + " = ? ",
-                new String[]{String.valueOf(levelID)});
-
-        if (id == -1) {
-            return false;
+            int rows = db.update(STAR_TABLE_NAME, values,
+                    STAR_COLUMN_LEVEL + " = ? ",
+                    new String[]{String.valueOf(levelID)});
+            return rows > 0;
+        } finally {
+            db.close();
         }
-        return true;
     }
 
     public int getLevelStar(int levelID) {
-        // Get readable database as we are not inserting anything
         SQLiteDatabase db = getReadableDatabase();
-
-        Cursor cursor = db.query(STAR_TABLE_NAME,
-                new String[]{STAR_COLUMN_STAR},
-                STAR_COLUMN_LEVEL + " =? ",
-                new String[]{String.valueOf(levelID)},
-                null, null, null, null);
-
+        Cursor cursor = null;
         int star = -1;
-        if (cursor.moveToFirst()) {
-            star = cursor.getInt(0);
+        try {
+            cursor = db.query(STAR_TABLE_NAME,
+                    new String[]{STAR_COLUMN_STAR},
+                    STAR_COLUMN_LEVEL + " =? ",
+                    new String[]{String.valueOf(levelID)},
+                    null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                star = cursor.getInt(0);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-
-        // Close db connection
-        cursor.close();
-        db.close();
-
         return star;
     }
 
     public ArrayList<Integer> getAllLevelStar() {
         ArrayList<Integer> stars = new ArrayList<>();
-
-        // Select all query
-        String selectQuery = "SELECT * FROM " + STAR_TABLE_NAME;
-
-        // Get readable database as we are not inserting anything
+        String selectQuery = "SELECT * FROM " + STAR_TABLE_NAME + " ORDER BY " + STAR_COLUMN_LEVEL + " ASC";
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // Looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                stars.add(cursor.getInt(1));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(selectQuery, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    stars.add(cursor.getInt(cursor.getColumnIndexOrThrow(STAR_COLUMN_STAR)));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-
-        // Close db connection
-        cursor.close();
-        db.close();
-
         return stars;
     }
     //===========================================================

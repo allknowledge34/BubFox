@@ -339,29 +339,38 @@ public class GameController extends GameObject implements AdManager.AdRewardList
 
     private void showRewardedAd() {
         // Show rewarded ad
-        AdManager adManager = ((MainActivity) mParent).getAdManager();
+        final AdManager adManager = ((MainActivity) mParent).getAdManager();
         adManager.setListener(this);
-        boolean isConnect = adManager.showRewardAd();
-        // Check connection
-        if (isConnect) {
-            // Pause the game when loading ad, or the pause dialog will show
+        if (adManager.isAdLoaded()) {
             mGame.getGameEngine().pauseGame();
-        } else {
-            // Show error dialog if no internet connect
-            ErrorDialog dialog = new ErrorDialog(mParent) {
-                @Override
-                public void retry() {
-                    adManager.requestAd();
-                    showRewardedAd();
-                }
-
-                @Override
-                public void quit() {
-                    gameEvent(MyGameEvent.GAME_OVER);
-                }
-            };
-            mParent.showDialog(dialog);
+            adManager.showRewardAd();
+            return;
         }
+
+        // Ad not ready yet: request asynchronously
+        adManager.requestAd(new AdManager.AdLoadCallback() {
+            @Override
+            public void onAdLoaded() {
+                mGame.getGameEngine().pauseGame();
+                adManager.showRewardAd();
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+                ErrorDialog dialog = new ErrorDialog(mParent) {
+                    @Override
+                    public void retry() {
+                        showRewardedAd();
+                    }
+
+                    @Override
+                    public void quit() {
+                        gameEvent(MyGameEvent.GAME_OVER);
+                    }
+                };
+                mParent.showDialog(dialog);
+            }
+        });
     }
 
     @Override

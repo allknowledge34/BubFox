@@ -99,7 +99,7 @@ public class BasicBubble extends PlayerBubble {
 
     @Override
     protected void onBubbleHit(Bubble bubble) {
-        if (mY >= bubble.mY
+        if ((mY + mHeight * 0.5f >= bubble.mY || mY >= bubble.mY - bubble.mHeight * 0.5f)
                 && !mDetectedCollision) {
             // Notify the target counter
             gameEvent(MyGameEvent.BUBBLE_HIT);

@@ -76,11 +76,14 @@ public abstract class SoundManager {
     // Methods to change state of music
     //--------------------------------------------------------
     public void loadMusic(int musicId) {
+        unloadMusic();
         mMusicPlayer = MediaPlayer.create(mContext, musicId);
-        mMusicPlayer.setLooping(true);
-        mMusicPlayer.setVolume(DEFAULT_MUSIC_VOLUME, DEFAULT_MUSIC_VOLUME);
-        if (mMusicEnabled) {
-            mMusicPlayer.start();
+        if (mMusicPlayer != null) {
+            mMusicPlayer.setLooping(true);
+            mMusicPlayer.setVolume(DEFAULT_MUSIC_VOLUME, DEFAULT_MUSIC_VOLUME);
+            if (mMusicEnabled) {
+                mMusicPlayer.start();
+            }
         }
     }
 

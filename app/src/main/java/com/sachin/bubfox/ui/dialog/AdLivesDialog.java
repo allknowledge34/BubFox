@@ -52,21 +52,30 @@ public class AdLivesDialog extends GameDialog implements View.OnClickListener,
     }
 
     private void showAd() {
-        AdManager ad = ((MainActivity) mParent).getAdManager();
+        final AdManager ad = ((MainActivity) mParent).getAdManager();
         ad.setListener(this);
-        boolean isConnect = ad.showRewardAd();
-
-        // Show error dialog if no internet connect
-        if (!isConnect) {
-            ErrorDialog dialog = new ErrorDialog(mParent) {
-                @Override
-                public void retry() {
-                    ((MainActivity) mParent).getAdManager().requestAd();
-                    showAd();
-                }
-            };
-            mParent.showDialog(dialog);
+        if (ad.isAdLoaded()) {
+            ad.showRewardAd();
+            return;
         }
+
+        ad.requestAd(new AdManager.AdLoadCallback() {
+            @Override
+            public void onAdLoaded() {
+                ad.showRewardAd();
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+                ErrorDialog dialog = new ErrorDialog(mParent) {
+                    @Override
+                    public void retry() {
+                        showAd();
+                    }
+                };
+                mParent.showDialog(dialog);
+            }
+        });
     }
 
     @Override

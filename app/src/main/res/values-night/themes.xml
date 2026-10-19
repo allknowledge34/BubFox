@@ -1,6 +1,6 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.BubFox" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BubFox" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     </style>
 
     <style name="Theme.BubFox" parent="Base.Theme.BubFox" />

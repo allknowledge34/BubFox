@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.sachin.bubfox.game_engine.level.LevelManager;
@@ -26,6 +27,23 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!mDialogStack.empty()) {
+                    // Dismiss the last dialog in stack
+                    mDialogStack.peek().dismiss();
+                    return;
+                }
+                final GameFragment fragment = (GameFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
+                if (fragment == null || !fragment.onBackPressed()) {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        });
     }
 
     protected void setContainerId(int containerId) {
@@ -65,7 +83,9 @@ public class GameActivity extends AppCompatActivity {
     }
     public void dismissDialog() {
         // Pop the last dialog in stack
-        mDialogStack.pop();
+        if (!mDialogStack.empty()) {
+            mDialogStack.pop();
+        }
     }
     @Override
     protected void onPause() {
@@ -84,22 +104,15 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        while (!mDialogStack.empty()) {
+            GameDialog dialog = mDialogStack.pop();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
         if (mSoundManager != null) {
             mSoundManager.unloadMusic();
             mSoundManager.unloadSound();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!mDialogStack.empty()) {
-            // Dismiss the last dialog in stack
-            mDialogStack.peek().dismiss();
-            return;
-        }
-        final GameFragment fragment = (GameFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT);
-        if (fragment == null || !fragment.onBackPressed()) {
-            super.onBackPressed();
         }
     }
 

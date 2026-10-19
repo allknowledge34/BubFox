@@ -62,25 +62,34 @@ public class MyGameFragment extends GameFragment implements View.OnClickListener
     @Override
     public void onPause() {
         super.onPause();
-        mGame.pause();
+        if (mGame != null) {
+            mGame.pause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mGame.stop();
+        if (mGame != null) {
+            mGame.stop();
+        }
     }
 
     @Override
     public boolean onBackPressed() {
-        mGame.pause();
-        return true;
+        if (mGame != null) {
+            mGame.pause();
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void onClick(View view) {
         getGameActivity().getSoundManager().playSound(MySoundEvent.BUTTON_CLICK);
-        mGame.pause();
+        if (mGame != null) {
+            mGame.pause();
+        }
     }
 
 }

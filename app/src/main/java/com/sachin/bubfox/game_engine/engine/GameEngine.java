@@ -149,15 +149,29 @@ public class GameEngine {
     }
 
     public void addUpdatable(final Updatable updatable) {
-        if (isRunning()) {
-            mAddWaitingPool.add(updatable);
-        } else {
-            addToEngine(updatable);
+        if (updatable == null) {
+            return;
+        }
+        synchronized (mDrawables) {
+            if (isRunning()) {
+                if (!mAddWaitingPool.contains(updatable) && !mUpdatables.contains(updatable)) {
+                    mAddWaitingPool.add(updatable);
+                }
+            } else {
+                addToEngine(updatable);
+            }
         }
     }
 
     public void removeUpdatable(final Updatable updatable) {
-        mRemoveWaitingPool.add(updatable);
+        if (updatable == null) {
+            return;
+        }
+        synchronized (mDrawables) {
+            if (!mRemoveWaitingPool.contains(updatable)) {
+                mRemoveWaitingPool.add(updatable);
+            }
+        }
     }
 
     public void onGameEvent(GameEvent gameEvent) {

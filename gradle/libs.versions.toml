@@ -8,6 +8,7 @@ material = "1.14.0"
 activity = "1.13.0"
 constraintlayout = "2.2.2"
 playServicesAdsLite = "23.0.0"
+ump = "3.1.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -18,6 +19,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-ads-lite = { group = "com.google.android.gms", name = "play-services-ads-lite", version.ref = "playServicesAdsLite" }
+user-messaging-platform = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "ump" }
 
 
 [plugins]

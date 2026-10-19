@@ -92,7 +92,7 @@ public class ColorBubble extends BoosterBubble {
 
     @Override
     protected void onBubbleHit(Bubble bubble) {
-        if (mY >= bubble.mY
+        if ((mY + mHeight * 0.5f >= bubble.mY || mY >= bubble.mY - bubble.mHeight * 0.5f)
                 && !mConsume) {
             // Get the new added bubble
             Bubble newBubble = mBubbleSystem.getCollidedBubble(this, bubble);

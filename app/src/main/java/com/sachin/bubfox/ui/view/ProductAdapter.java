@@ -34,22 +34,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder viewHolder, final int position) {
-        // Init the view holder
-        Product product = mProductList.get(position);
+    public void onBindViewHolder(ProductViewHolder viewHolder, int position) {
+        int bindingPos = viewHolder.getBindingAdapterPosition();
+        int itemIndex = (bindingPos != RecyclerView.NO_POSITION) ? bindingPos : position;
+        Product product = mProductList.get(itemIndex);
         viewHolder.mTxtProductDescription.setText(product.getDescription());
         viewHolder.mImageProduct.setImageResource(product.getDrawableId());
         viewHolder.mBtnProduct.setBackgroundResource(product.getButtonId());
         viewHolder.mBtnProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Show the confirm dialog
-                showDialog(product);
+                int currentPos = viewHolder.getBindingAdapterPosition();
+                if (currentPos != RecyclerView.NO_POSITION && currentPos < mProductList.size()) {
+                    // Show the confirm dialog
+                    showDialog(mProductList.get(currentPos));
+                }
             }
         });
         // Init UI effect
-        UIEffect.createPopUpEffect(viewHolder.itemView, position);
-        UIEffect.createPopUpEffect(viewHolder.mBtnProduct, position + 2);
+        int popOrder = (bindingPos != RecyclerView.NO_POSITION) ? bindingPos : 0;
+        UIEffect.createPopUpEffect(viewHolder.itemView, popOrder);
+        UIEffect.createPopUpEffect(viewHolder.mBtnProduct, popOrder + 2);
         UIEffect.createButtonEffect(viewHolder.mBtnProduct);
     }
 

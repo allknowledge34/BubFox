@@ -104,7 +104,9 @@ public class LivesTimer {
     }
 
     public void reduceLive() {
-        mLivesNum--;
+        if (mLivesNum > 0) {
+            mLivesNum--;
+        }
         // Check is any current time left, so we won't override the current state
         if (mTimeLeftInMillis == 0L) {
             // We set them as start value
@@ -125,18 +127,20 @@ public class LivesTimer {
     }
 
     public boolean isLivesFull() {
-        return mLivesNum == LIVES_MAX;
+        return mLivesNum >= LIVES_MAX;
     }
 
     private void updateLivesText() {
-        mTxtLives.setText(String.valueOf(mLivesNum));
-        if (mLivesNum == 0) {
-            mTxtLives.setBackgroundResource(R.drawable.lives_lock);
-        } else {
-            mTxtLives.setBackgroundResource(R.drawable.lives);
-            if (mLivesNum == LIVES_MAX) {
-                mTxtTime.setText(mActivity.getResources().getString(R.string.txt_lives_full));
+        if (mTxtLives != null) {
+            mTxtLives.setText(String.valueOf(mLivesNum));
+            if (mLivesNum == 0) {
+                mTxtLives.setBackgroundResource(R.drawable.lives_lock);
+            } else {
+                mTxtLives.setBackgroundResource(R.drawable.lives);
             }
+        }
+        if (mTxtTime != null && mLivesNum >= LIVES_MAX) {
+            mTxtTime.setText(mActivity.getResources().getString(R.string.txt_lives_full));
         }
     }
 
@@ -168,7 +172,9 @@ public class LivesTimer {
                         // Live is full, so we reset the time
                         mTimeLeftInMillis = 0;  // Somehow it won't be 0 (Actually a little bigger than 1000)
                         mEndTime = 0;
-                        mTxtTime.setText(mActivity.getResources().getString(R.string.txt_lives_full));
+                        if (mTxtTime != null) {
+                            mTxtTime.setText(mActivity.getResources().getString(R.string.txt_lives_full));
+                        }
                     }
                 }
 
@@ -178,6 +184,9 @@ public class LivesTimer {
     }
 
     private void updateCountDownText() {
+        if (mTxtTime == null) {
+            return;
+        }
         int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
         // Convert to time format

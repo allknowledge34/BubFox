@@ -90,7 +90,7 @@ public class WinDialog extends GameDialog implements View.OnClickListener,
 
         if (oldStar == -1) {
             // If data doesn't exist, we add one
-            databaseHelper.insertLevelStar(mStar);
+            databaseHelper.insertLevelStar(mLevel, mStar);
         } else {
             // If data exist and new star is bigger, we update
             if (mStar > oldStar) {
