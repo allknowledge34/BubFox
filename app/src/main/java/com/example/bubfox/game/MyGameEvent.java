@@ -1,0 +1,30 @@
+package com.example.bubfox.game;
+
+
+import com.example.bubfox.game_engine.event.GameEvent;
+
+public enum MyGameEvent implements GameEvent {
+    // Player input event
+    SHOOT_BUBBLE,
+    SWITCH_BUBBLE,
+
+    // Bubble event
+    BUBBLE_SHOT,
+    BUBBLE_HIT,
+    BUBBLE_POP,
+    BUBBLE_CONSUMED,
+    COLLECT_ITEM,
+
+    // Booster event
+    BOOSTER_ADDED,
+    BOOSTER_REMOVED,
+    BOOSTER_SHOT,
+    BOOSTER_CONSUMED,
+
+    // Game lifecycle event
+    GAME_WIN,
+    GAME_OVER,
+    EMIT_CONFETTI,
+    SHOW_WIN_DIALOG,
+    ADD_EXTRA_MOVE
+}
