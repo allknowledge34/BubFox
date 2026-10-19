@@ -1,0 +1,46 @@
+package com.sachin.bubfox.game.counter.target;
+
+import com.sachin.bubfox.game.MyGameEvent;
+import com.sachin.bubfox.game_engine.Game;
+import com.sachin.bubfox.game_engine.event.GameEvent;
+
+
+public class CollectTargetCounter extends TargetCounter {
+
+    private final String mTargetText;
+
+    public CollectTargetCounter(Game game) {
+        super(game);
+        mTargetText = "/" + mTarget;
+    }
+
+    @Override
+    protected boolean isTargetReach() {
+        return mPoints == mTarget;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPoints = 0;
+    }
+
+    @Override
+    protected void onDrawUI() {
+        mText.setText(mPoints + mTargetText);
+    }
+
+    @Override
+    public void onGameEvent(GameEvent gameEvents) {
+        super.onGameEvent(gameEvents);
+        if ((MyGameEvent) gameEvents == MyGameEvent.COLLECT_ITEM) {
+            mPoints++;
+            drawUI();
+
+            if (isTargetReach()) {
+                mTargetHaveReached = true;
+            }
+        }
+    }
+
+}

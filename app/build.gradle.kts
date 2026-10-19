@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bubfox"
+    namespace = "com.sachin.bubfox"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.bubfox"
+        applicationId = "com.sachin.bubfox"
         minSdk = 26
         targetSdk = 37
         versionCode = 1

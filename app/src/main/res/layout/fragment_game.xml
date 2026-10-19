@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent" />
         -->
 
-    <com.example.bubfox.game_engine.GameView
+    <com.sachin.bubfox.game_engine.GameView
         android:id="@+id/game_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

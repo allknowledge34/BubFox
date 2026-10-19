@@ -1,0 +1,34 @@
+package com.sachin.bubfox.game.bubble.type;
+
+import com.sachin.bubfox.game.bubble.Bubble;
+import com.sachin.bubfox.game.bubble.BubbleColor;
+import com.sachin.bubfox.game_engine.Game;
+
+public class DummyBubble extends Bubble {
+
+    public Bubble mTargetBubble;   // A reference to the target bubble
+
+    public DummyBubble(Game game) {
+        super(game, BubbleColor.DUMMY);
+        // We use DUMMY in bubble color here, so it will not be detected as floater
+    }
+
+    @Override
+    public void popBubble() {
+        if (mTargetBubble != null) {
+            mTargetBubble.popBubble();
+        } else {
+            super.popBubble();
+        }
+    }
+
+    @Override
+    public void popFloater() {
+        if (mTargetBubble != null) {
+            // The target bubble will do the works
+            return;
+        }
+        super.popFloater();
+    }
+
+}
