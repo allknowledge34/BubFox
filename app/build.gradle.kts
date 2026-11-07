@@ -18,8 +18,8 @@ android {
         applicationId = "com.sachin.bubfox"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,11 +44,7 @@ android {
             manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
         }
         release {
-            val releaseAppId = keystoreProperties.getProperty("admobAppId")
-                ?: System.getenv("ADMOB_APP_ID")
-            if (!releaseAppId.isNullOrBlank()) {
-                manifestPlaceholders["admobAppId"] = releaseAppId
-            }
+            manifestPlaceholders["admobAppId"] = "ca-app-pub-5744857349829100~2093606360"
 
             val releaseSigning = signingConfigs.getByName("release")
             if (releaseSigning.storeFile != null) {

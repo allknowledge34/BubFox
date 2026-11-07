@@ -38,6 +38,6 @@
     <string name="txt_tutorial_obstacle_bubble">Smash the wood by\nhitting it with a bubble !</string>
 
     <!-- Text of Ad code -->
-    <string name="txt_admob_banner">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="txt_admob_reward">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="txt_admob_banner">ca-app-pub-5744857349829100/8467443026</string>
+    <string name="txt_admob_reward">ca-app-pub-5744857349829100/8749895509</string>
 </resources>
